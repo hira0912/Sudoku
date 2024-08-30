@@ -1,4 +1,5 @@
 def lambda_handler(event, context):
+    
     # 盤面の設定
     panel_first = ['x91x65x7x','xx6xx48x1','xx5817x26','xxxxxxxxx','162x89xx4','4xx1xx68x','25xxx819x','6xxx513x2','xxx472xxx']
     panel_difficult = ['8xxxxxxxx','xx36xxxxx','x7xx9x2xx','x5xxx7xxx','xxxx457xx','xxx1xxx3x','xx1xxxx68','xx85xxx1x','x9xxxx4xx']
@@ -6,7 +7,7 @@ def lambda_handler(event, context):
     
     # 盤面の計算
     panel_str = ''.join(panel_first)
-    panel_ans_str = calc_panel(panel_str,0)
+    panel_ans_str = calc_panel(panel_str)
     
     # 計算結果の表示
     panel_ans = []
@@ -15,18 +16,28 @@ def lambda_handler(event, context):
     return panel_ans
 
 # 計算ルーチン
-def calc_panel(panel,position):
-    if(panel[position]=='x'):
-        possibility = calc_possibility(panel,position) #[1,2,3,4,5,6,7,8,9]
-        while len(possibility)>0 :
-            panel_mod = setval(panel,position,possibility.pop(0))
-            ret = calc_panel(panel_mod,position+1)
-    else:
-        ret = calc_panel(panel,position+1)
+## 各セルの配置可能性を算出し、配置可能性から確定した場合はパネルに格納する
+## 配置可能性からこれ以上進展がしない段階になったらパネルを確定させる
+def calc_panel(panel):
+    flag = True
     
-    if not ret:
+    while flag:
+        # 内部変数の初期化
+        flag = False
+        possibility = []
         
-                    
+        # 空きセルはpossibilityを計算（埋まっているセルはFalseとする)
+        for position in range(len(panel)):
+            if panel[position]!='x':
+                possibility.append(False)
+            else:
+                possibility.append(calc_possibility(panel,position))
+                if(len(possibility[position])==1):
+                    panel = setval(panel,position,possibility[position][0])
+                    flag = True
+
+    return panel
+        
 # セル単位の配置可能性の計算
 def calc_possibility(panel,position):
     possibility = ['1','2','3','4','5','6','7','8','9']
@@ -62,43 +73,3 @@ def calc_possibility(panel,position):
 def setval(panel,position,value):
     panel = panel[:position] + value + panel[position+1:]
     return panel
-
-# パネル全体のチェック
-def check_panel(panel):
-    # 各行の調査    
-    for row in range(0,81,9):
-        ans = []
-        for col in range(9):
-            ans.append(panel[row+col])
-        if not check_ans(ans):
-            return False
-    
-    # 各列の調査
-    for col in range(9):
-        ans = []
-        for row in range(0,81,9):
-            ans.append(panel[row+col])
-        if not check_ans(ans):
-            return False
-    
-    # 各ブロックの調査
-    for block in range(9):
-        row = block // 3
-        col = block % 3
-        ans = []
-        for pos in range(9):
-            x = pos // 3
-            y = pos % 3
-            ans.append(panel[(3*row + x)*9+(3*col + y)])
-        if not check_ans(ans):
-            return False
-    return True
-    
-# 特定9文字配列の確認
-def check_ans(ans):
-    checker = '123456789'
-    ans.sort()
-    ans_join = ''.join(ans)
-    if(ans_join != checker):
-        return False
-    return True
