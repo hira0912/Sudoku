@@ -32,7 +32,7 @@ def calc_panel(panel,position,cnt):
 
     # セルが空欄の場合
     if(panel[position]=='x'):
-        possibility = ['1','2','3','4','5','6','7','8','9']
+        possibility = calc_possibility(panel,position) # possibility = [1,2,3,4,5,6,7,8,9]
         
         while len(possibility)>0 :
             # 答え導出完了による早期終了条件
@@ -47,6 +47,37 @@ def calc_panel(panel,position,cnt):
     else:
         ret,panel_ans,cnt = calc_panel(panel,position+1,cnt)
         return ret,panel_ans,cnt
+
+# セル単位の配置可能性の計算
+def calc_possibility(panel,position):
+    possibility = ['1','2','3','4','5','6','7','8','9']
+    col = position%9
+    row = position//9
+    
+    #同じ行のチェック
+    for i in range(row*9,(row+1)*9):
+        if i!=position and panel[i]!='x':
+            if panel[i] in possibility:
+                possibility.remove(panel[i])
+
+    #同じ列のチェック
+    for i in range(col,col+9*9,9):
+        if i!=position and panel[i]!='x':
+            if panel[i] in possibility:
+                possibility.remove(panel[i])
+    
+    #同じブロックのチェック
+    block_row = row // 3
+    block_col = col // 3
+    block_start = (block_row * 3 * 9) + (block_col * 3)
+
+    for i in range(block_start, block_start + 21, 9):
+        for j in range(i, i + 3):
+            if 0 <= j < len(panel) and j != position and panel[j] != 'x':
+                if panel[j] in possibility:
+                    possibility.remove(panel[j])
+
+    return possibility
 
 # パネルに数値追加
 def setval(panel,position,value):
