@@ -35,7 +35,6 @@ def calc_panel(panel):
                 if(len(possibility[position])==1):
                     panel = setval(panel,position,possibility[position][0])
                     flag = True
-
     return panel
         
 # セル単位の配置可能性の計算
