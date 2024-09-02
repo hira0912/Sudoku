@@ -68,15 +68,16 @@ def organize_panel(panel,cnt):
             if panel[position]!='x':
                 possibility.append(False)
             else:
-                possibility.append(calc_possibility(panel,position))
-                if(len(possibility[position])==0):
+                tmp_possibility = calc_possibility(panel,position)
+                if(len(tmp_possibility)==0):
                     org_ret = False
                     break
-                if(len(possibility[position])==1):
-                    panel = setval(panel,position,possibility[position][0])
+                if(len(tmp_possibility)==1):
+                    panel = setval(panel,position,tmp_possibility[0])
                     cnt += 1
                     flag = True
                     break
+                possibility.append(tmp_possibility)
     return org_ret,panel,cnt
 
 # セル単位の配置可能性の計算
