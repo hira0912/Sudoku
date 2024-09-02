@@ -8,7 +8,7 @@ def lambda_handler(event, context):
 
     # 盤面の計算
     panel_str = ''.join(panel_question2)
-    ret,panel_ans_str,cnt = calc_panel(panel_str,0)
+    ret,panel_ans_str,cnt = dfs(panel_str,0)
     
     # 計算結果の表示
     panel_ans = []
@@ -17,7 +17,7 @@ def lambda_handler(event, context):
     return panel_ans,cnt,panel_str.count('x')
 
 # 計算ルーチン
-def calc_panel(panel,cnt):
+def dfs(panel,cnt):
     # セルが最終セルの場合
     if(panel.count('x')<=0):
         return check_panel(panel),panel,cnt
@@ -37,7 +37,7 @@ def calc_panel(panel,cnt):
         # 計算カウント数に1を足す
         cnt += 1
         panel_mod = setval(panel,position,possibility.pop(0))
-        ret,panel_ans,cnt = calc_panel(panel_mod,cnt)
+        ret,panel_ans,cnt = dfs(panel_mod,cnt)
     return ret,panel_ans,cnt
 
 # 盤面全体から次の計算先を算出する
