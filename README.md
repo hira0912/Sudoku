@@ -1,5 +1,6 @@
 # This Program Purpose
 This program is for solving Sudoku.
+
 The execution environment uses AWS Lambda and is executed using the python language.
 
 # Program List
@@ -20,6 +21,7 @@ However, we found that this program was extremely slow, and took so long that it
 
 ## Sudoku03-1.py
 This is a program that solves Sudoku using the DFS (depth-first search) method.
+
 This allows you to solve very complex Sudoku quickly. However, there are some improvements that could be made, so we decided to add them.
 
 
@@ -50,3 +52,33 @@ This Function is solved next step position for dfs.
 ### Changed Structure
 Changed the placement possibility used for DFS from list to queue.
 This is because we thought it would be faster since it only performs FIFO (First-In First-Out), but since the original array was not large, the effect was small.
+
+
+## Sudoku04-1.py
+This is a program with a modified structure of Sudoku03-1.
+
+In terms of directionality, we attempted to dynamically change the order of execution, which had previously been executed sequentially from the top left cell to the right. We thought that cells that are processed in the early stages have a high possibility of placement, that is, cells that have fewer branches will have higher processing efficiency.
+
+Therefore, we considered improving efficiency by calculating the placement possibilities of all cells each time, and selecting cells with the highest placement possibility as assumptions in order.
+However, the speed was actually significantly lower than Sudoku03-1. This is due to the high rate at which placement possibilities are calculated.
+
+### Added Function
+- calc_next_position
+
+This Function is solved next step position for dfs.
+
+The name is similar to the function added in Sudoku03-3, but whereas Sudoku03-3 simply determines whether the next cell is empty, this function calculates the placement possibility of all cells.
+
+The specification is to select the most appropriate cell for the next calculation from among them.
+However, each time it is executed, a calculation amount of O(24K) when the number of empty cells is K is generated, so there is a possibility that the speed will be extremely slow.
+
+### Changed Structure
+As mentioned in the overview, we changed the assumed order of cells.
+
+
+## Sudoku04-2.py
+Based on Sudoku04-1, the idea/function of Sudoku01 has been added.The idea is the same as what was added in Sudoku03-2, so I will not explain the overview of Sudoku01 here (see the overview of Sudoku03-2)
+
+However, we found that even with this method added, the results were much slower than Sudoku03-1. This shows that increasing the number of trials assumed for DFS was faster than dynamically optimizing placement possibilities.
+
+There is a possibility that if this method is improved further, it may be faster than the Sudoku03 series, but as it is currently not very likely, we have decided not to pursue it any further.
