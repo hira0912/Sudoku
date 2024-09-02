@@ -9,7 +9,7 @@ def lambda_handler(event, context):
     
     # 盤面の計算
     panel_str = ''.join(panel_question2)
-    ret,panel_ans_str,cnt = calc_panel(panel_str,0,0)
+    ret,panel_ans_str,cnt = dfs(panel_str,0,0)
     
     # 計算結果の表示
     panel_ans = []
@@ -18,16 +18,16 @@ def lambda_handler(event, context):
     return panel_ans,cnt,panel_str.count('x')
 
 # 計算ルーチン
-def calc_panel(panel,position,cnt):
+def dfs(panel,position,cnt):
+    # セルが最終セルの場合
+    if(position>80):
+        return True,panel,cnt
+    
     # パネル整理
     org_ret,panel,cnt = organize_panel(panel,cnt)
     # パネル整理の結果エラーが見付かった場合
     if not org_ret:
         return False,[],cnt
-
-    # セルが最終セルの場合
-    if(position>80):
-        return True,panel,cnt
 
     # 変数の定義
     ret = False
@@ -45,12 +45,12 @@ def calc_panel(panel,position,cnt):
             # 計算カウント数に1を足す
             cnt += 1
             panel_mod = setval(panel,position,possibility.pop(0))
-            ret,panel_ans,cnt = calc_panel(panel_mod,position+1,cnt)
+            ret,panel_ans,cnt = dfs(panel_mod,position+1,cnt)
         return ret,panel_ans,cnt
 
     # セルが既に埋まっている場合は下のセルに継ぐ
     else:
-        ret,panel_ans,cnt = calc_panel(panel,position+1,cnt)
+        ret,panel_ans,cnt = dfs(panel,position+1,cnt)
         return ret,panel_ans,cnt
 
 # 盤面整理
