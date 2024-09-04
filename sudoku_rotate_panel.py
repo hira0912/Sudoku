@@ -16,17 +16,49 @@ def lambda_handler(event, context):
         panel_ans.append(panel_ans_str[i:i+9])
     return panel_ans
 
-# パネルの数値入れ替え
+# パネルの入れ替え
 def rotate_panel(panel):
+    panel = position_change(panel)
+    panel = number_change(panel)
+    return panel
+
+# 配置入れ替え
+def position_change(panel):
+    # 行(3行範囲内)入れ替え
+    panel_ref = panel
+    panel_tmp = ''
+    for i in range(0,9,3):
+        combi_tmp = []
+        for j in range(i,i+3):
+            combi_tmp.append(panel_ref[j*9:(j+1)*9])
+        shuffle_combi_list = random.sample(combi_tmp,len(combi_tmp))
+        panel_tmp += ''.join(shuffle_combi_list)
+        
+    # 行(3行単位)入れ替え
+    panel_ref = panel_tmp
+    panel_tmp = ''
+    combi_tmp = []
+    for i in range(0,9,3):
+        combi_tmp.append(panel_ref[i*9:(i+3)*9])
+    shuffle_combi_list = random.sample(combi_tmp,len(combi_tmp))
+    panel_tmp += ''.join(shuffle_combi_list)
+
+    return panel_tmp
+
+# 数値入れ替え
+def number_change(panel):
     panel_ans = ''
 
     value_list = ['1','2','3','4','5','6','7','8','9']
     shuffle_value_list = random.sample(value_list,len(value_list))
 
     for i in range(81):
-        for j in range(len(value_list)):
-            if panel[i] == value_list[j]:
-                panel_ans += shuffle_value_list[j]
-                break
+        if panel[i] == 'x':
+            panel_ans += 'x'
+        else:
+            for j in range(len(value_list)):
+                if panel[i] == value_list[j]:
+                    panel_ans += shuffle_value_list[j]
+                    break
 
     return panel_ans
