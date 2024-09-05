@@ -6,7 +6,6 @@ def lambda_handler(event, context):
     panel_question2 = ['8xxxxxxxx','xx36xxxxx','x7xx9x2xx','x5xxx7xxx','xxxx457xx','xxx1xxx3x','xx1xxxx68','xx85xxx1x','x9xxxx4xx'] # 空きセル60個
     panel_question2_ans = ['812753649','943682175','675491283','154237896','369845721','287169534','521974368','438526917','796318452']
 
-    
     # 盤面の計算
     panel_str = ''.join(panel_question1)
     ret,panel_ans_str,cnt = calc_panel(panel_str,0,0)

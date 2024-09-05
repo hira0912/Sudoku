@@ -1,13 +1,14 @@
 def lambda_handler(event, context):
     
-    # 盤面の設定
-    panel_first = ['x91x65x7x','xx6xx48x1','xx5817x26','xxxxxxxxx','162x89xx4','4xx1xx68x','25xxx819x','6xxx513x2','xxx472xxx']
-    panel_difficult = ['8xxxxxxxx','xx36xxxxx','x7xx9x2xx','x5xxx7xxx','xxxx457xx','xxx1xxx3x','xx1xxxx68','xx85xxx1x','x9xxxx4xx']
-    #panel_last = ['891265473','726394851','345817926','538746219','162589734','479123685','254638197','687951342','913472568']
-    
+    # 問題盤面（及び答え）の記載
+    panel_question1 = ['x91x65x7x','xx6xx48x1','xx5817x26','xxxxxxxxx','162x89xx4','4xx1xx68x','25xxx819x','6xxx513x2','xxx472xxx'] # 空きセル43個
+    panel_question1_ans = ['891265473','726394851','345817926','538746219','162589734','479123685','254638197','687951342','913472568']
+    panel_question2 = ['8xxxxxxxx','xx36xxxxx','x7xx9x2xx','x5xxx7xxx','xxxx457xx','xxx1xxx3x','xx1xxxx68','xx85xxx1x','x9xxxx4xx'] # 空きセル60個
+    panel_question2_ans = ['812753649','943682175','675491283','154237896','369845721','287169534','521974368','438526917','796318452']
+
     # 盤面の計算
-    panel_str = ''.join(panel_first)
-    panel_ans_str = calc_panel(panel_str)
+    panel_str = ''.join(panel_question1)
+    ret,panel_ans_str,cnt = calc_panel(panel_str,0,0)
     
     # 計算結果の表示
     panel_ans = []
